@@ -8,6 +8,12 @@ set(CMAKE_C_COMPILER 			"${ARM_TOOLCHAIN_DIR}/${TOOLCHAIN_PREFIX}-gcc")
 set(CMAKE_ASM_COMPILER 			"${CMAKE_C_COMPILER}")
 set(CMAKE_CXX_COMPILER 			"${ARM_TOOLCHAIN_DIR}/${TOOLCHAIN_PREFIX}-g++")
 
+add_definitions(     
+    -DSTM32F302x8
+    -DUSE_HAL_DRIVER
+    -DDEBUG  
+    )
+
 set(GCC_CROSS_BASE_FLAGS
         "-mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -specs=nosys.specs -specs=nano.specs -fpic -ffunction-sections -fdata-sections -fno-lto -Wl,--gc-sections -Wall -Og -g3")
 set(CMAKE_C_COMPILER_TARGET thumbv7m-unknown-none-eabi)

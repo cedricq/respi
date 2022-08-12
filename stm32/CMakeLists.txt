@@ -1,5 +1,7 @@
 set(PROJECT stm32)
 
+if(NOT ${TEST})
+
 file(GLOB STM32_SOURCES 
 	Drivers/STM32F3xx_HAL_Driver/Src/*.c
 )
@@ -16,8 +18,6 @@ target_compile_definitions(${PROJECT}_driver PRIVATE
     USE_HAL_DRIVER
     DEBUG 
     )
-
-
 set(MAIN_GENERATED_FILES
     Core/Src/main.c
     Core/Src/crc.cpp
@@ -27,15 +27,9 @@ set(MAIN_GENERATED_FILES
 	# STARTUP SCRIPT
     Core/Startup/startup_stm32f302r8tx.s
 	)
-	
 set(EXECUTABLE ${PROJECT_NAME}.out)
 add_executable(${EXECUTABLE} ${MAIN_GENERATED_FILES})
 target_link_libraries (${EXECUTABLE} LINK_PUBLIC stm32_driver arch application)
-target_compile_definitions(${EXECUTABLE} PRIVATE
-    ${MCU_MODEL}
-    USE_HAL_DRIVER
-    DEBUG 
-    )   
 target_link_options(${EXECUTABLE} PRIVATE
     -T${CMAKE_CURRENT_SOURCE_DIR}/STM32F302R8TX_FLASH.ld
 )
@@ -53,3 +47,5 @@ add_custom_command(TARGET ${EXECUTABLE}
         COMMAND ${OBJCOPY_CMD} -O ihex   ${BIN_PATH}/${EXECUTABLE} ${BIN_PATH}/${PROJECT_NAME}.hex
         COMMAND ${OBJCOPY_CMD} -O binary ${BIN_PATH}/${EXECUTABLE} ${BIN_PATH}/${PROJECT_NAME}.bin
 )
+
+endif()
