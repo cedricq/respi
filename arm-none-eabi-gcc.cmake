@@ -1,7 +1,7 @@
 set(CMAKE_SYSTEM_NAME Generic)
 set(CMAKE_SYSTEM_PROCESSOR ARM)
 
-set(ARM_TOOLCHAIN_DIR /opt/gcc-arm-none-eabi-10.3-2021.10/bin)
+#set(ARM_TOOLCHAIN_DIR /opt/gcc-arm-none-eabi-10.3-2021.10/bin)
 set(TOOLCHAIN_PREFIX  arm-none-eabi)
 
 set(CMAKE_C_COMPILER 			"${ARM_TOOLCHAIN_DIR}/${TOOLCHAIN_PREFIX}-gcc")
@@ -16,8 +16,6 @@ add_definitions(
 
 set(GCC_CROSS_BASE_FLAGS
         "-mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -specs=nosys.specs -specs=nano.specs -fpic -ffunction-sections -fdata-sections -fno-lto -Wl,--gc-sections -Wall -Og -g3")
-set(CMAKE_C_COMPILER_TARGET thumbv7m-unknown-none-eabi)
-set(CMAKE_CXX_COMPILER_TARGET thumbv7m-unknown-none-eabi)
 set(CMAKE_C_FLAGS ${GCC_CROSS_BASE_FLAGS})
 set(CMAKE_CXX_FLAGS ${GCC_CROSS_BASE_FLAGS})
 set(CMAKE_ASM_FLAGS ${GCC_CROSS_BASE_FLAGS})
