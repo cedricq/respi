@@ -20,7 +20,6 @@ set(GCC_CROSS_BASE_FLAGS_DEFAULT
         "-mcpu=cortex-m4 -g -Og -ffunction-sections -fdata-sections -Wall -Wfatal-errors -fstack-usage --specs=nano.specs -mfloat-abi=hard -mthumb "
         # -Werror
 )
-# -DDEBUG -DUSE_HAL_DRIVER -DSTM32F302x8 
 
 set(GCC_CROSS_BASE_FLAGS_CPP
         "${GCC_CROSS_BASE_FLAGS_DEFAULT} -std=c++11 -fno-exceptions -fno-rtti -fno-use-cxa-atexit -fpermissive "
@@ -29,18 +28,14 @@ set(GCC_CROSS_BASE_FLAGS_CPP
 set(GCC_CROSS_BASE_FLAGS_C
         "${GCC_CROSS_BASE_FLAGS_DEFAULT} " 
 )
-#"-std=c++11 "
 
 set(GCC_CROSS_BASE_FLAGS_ASM
         "-mcpu=cortex-m4 -g1 -x assembler-with-cpp --specs=nano.specs -mfloat-abi=hard -mthumb "         
 )
-#"-std=c++11 "
 
 set(GCC_CROSS_BASE_FLAGS_LINKER
         "-mcpu=cortex-m4 -T${CMAKE_CURRENT_SOURCE_DIR}/stm32/STM32F302R8TX_FLASH.ld --specs=nosys.specs -Wl,-Map=respi.map -Wl,--gc-sections -static -mfloat-abi=hard -mthumb -u _printf_float "
 )
-#"-mcpu=cortex-m4 -T${CMAKE_CURRENT_SOURCE_DIR}/stm32/STM32F302R8TX_FLASH.ld --specs=nosys.specs -Wl,-Map=respi.map -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=hard -mthumb -u _printf_float "
-        #"-T ${CMAKE_CURRENT_SOURCE_DIR}/ldscripts/mem.ld -T ${CMAKE_CURRENT_SOURCE_DIR}/ldscripts/libs.ld -T ${CMAKE_CURRENT_SOURCE_DIR}/ldscripts/sections.ld -nostartfiles -Xlinker --gc-sections -Wl,-Map,test.map  "
                 
 set(CMAKE_C_FLAGS               ${GCC_CROSS_BASE_FLAGS_C})
 set(CMAKE_CXX_FLAGS             ${GCC_CROSS_BASE_FLAGS_CPP})

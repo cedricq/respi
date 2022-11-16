@@ -158,7 +158,7 @@ int main(void)
     tick_polled();
 
     a++;
-    if(a/100000 >= 1)
+    if(a/500000 >= 1)
     {
         if (flag != 0)
         {
