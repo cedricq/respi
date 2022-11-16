@@ -4,8 +4,8 @@
 #include "Fibre.hpp"
 #include "DataAccessor.hpp"
 
-const int TARGET_MOTOR_INSPI     = 750;
-const int TARGET_MOTOR_EXPI      = 600;
+const int TARGET_MOTOR_INSPI     = 500;
+const int TARGET_MOTOR_EXPI      = 200;
 const int TARGET_MOTOR_PEEP      = 150;
 const int TARGET_ON              = 999;
 const int TARGET_OFF             = 0;
@@ -35,6 +35,7 @@ public:
         default:
         case EXPI:
             expi_time_.set(time_.value - time_ini_);
+            peep_motor_target_.set(TARGET_MOTOR_PEEP*2);
             main_motor_target_.set(TARGET_MOTOR_EXPI);
             valve_ie_target_.set(TARGET_OFF);
             if ( trigger_.IsTrigger() )
@@ -47,6 +48,7 @@ public:
             break;
         case INSPI:
             inspi_time_.set(time_.value - time_ini_);
+            peep_motor_target_.set(TARGET_MOTOR_PEEP);
             main_motor_target_.set(TARGET_MOTOR_INSPI);
             valve_ie_target_.set(TARGET_ON);
             if ( trigger_.IsTrigger() )

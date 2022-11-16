@@ -3,8 +3,6 @@
 
 #include "DataAccessor.hpp"
 
-#include "stm32f3xx_hal.h"
-
 void init_threads()
 {
     FibreManager& thread_1ms = FibreManager::getInstance(THREAD_1MS_ID);
@@ -18,7 +16,7 @@ void tick_polled()
 {
     static FibreManager& thread_polled = FibreManager::getInstance(THREAD_POLLED_ID);
     thread_polled.Run();
-    HAL_Delay(10);
+    //HAL_Delay(10);
 }
 
 void tick_1ms()

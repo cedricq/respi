@@ -20,10 +20,10 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "threads.hpp"
 #include "stm32f3xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "threads.hpp"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/

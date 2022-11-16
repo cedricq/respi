@@ -80,6 +80,12 @@ extern DMA_HandleTypeDef*  p_hdma_usart3_tx;
 #define LD2_GPIO_Port GPIOB
 #define CmdQout_Pin GPIO_PIN_7
 #define CmdQout_GPIO_Port GPIOC
+#define EN_ACT_Pin GPIO_PIN_10
+#define EN_ACT_GPIO_Port GPIOA
+#define IN1_ACT_Pin GPIO_PIN_11
+#define IN1_ACT_GPIO_Port GPIOA
+#define IN2_ACT_Pin GPIO_PIN_12
+#define IN2_ACT_GPIO_Port GPIOA
 #define TMS_Pin GPIO_PIN_13
 #define TMS_GPIO_Port GPIOA
 #define TCK_Pin GPIO_PIN_14

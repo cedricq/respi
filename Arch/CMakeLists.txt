@@ -5,8 +5,7 @@ set(APP_SOURCES
     src/Fibre.cpp
 	)
 add_library (${PROJECT} ${APP_SOURCES})
-target_include_directories (${PROJECT} PUBLIC inc )
-
+target_include_directories (${PROJECT} PUBLIC inc)
 
 if(${TEST})
 set(APP_SOURCES

@@ -27,12 +27,13 @@ set(MAIN_GENERATED_FILES
 	# STARTUP SCRIPT
     Core/Startup/startup_stm32f302r8tx.s
 	)
-set(EXECUTABLE ${PROJECT_NAME}.out)
+set(EXECUTABLE ${PROJECT_NAME}.elf)
 add_executable(${EXECUTABLE} ${MAIN_GENERATED_FILES})
-target_link_libraries (${EXECUTABLE} LINK_PUBLIC stm32_driver arch application)
-target_link_options(${EXECUTABLE} PRIVATE
-    -T${CMAKE_CURRENT_SOURCE_DIR}/STM32F302R8TX_FLASH.ld
-)
+target_link_libraries (${EXECUTABLE} LINK_PUBLIC stm32_driver application) 
+# arch application)
+#target_link_options(${EXECUTABLE} PRIVATE
+#    -T${CMAKE_CURRENT_SOURCE_DIR}/STM32F302R8TX_FLASH.ld
+#)
 
 # Print executable size
 add_custom_command(TARGET ${EXECUTABLE}

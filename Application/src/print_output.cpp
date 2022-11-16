@@ -35,14 +35,16 @@ void printTelePlot(const std::vector<Datagram*> datagrams)
     char buffer[512]="";
     for(const auto& data: datagrams)
     {
+        int val = static_cast<int>(data->value);
+        int div = static_cast<int>(data->div);
         char txt[64];
-        if ( data->div > 1)
+        if ( div > 1)
         {
-            sprintf(txt, ">%s:%d.%d", data->name, static_cast<int>(data->value / data->div), static_cast<int>(data->value % data->div));
+            sprintf(txt, ">%s:%d.%3d", data->name, val / div, val % div);
         }
         else
         {
-            sprintf(txt, ">%s:%d", data->name, static_cast<int>(data->value));
+            sprintf(txt, ">%s:%d", data->name, val);
         }
         strcat(buffer, txt);
         strcat(buffer, "\r\n");

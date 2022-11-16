@@ -77,6 +77,7 @@ void InitQoutSensor()
 const char* I2C_INIT_ERROR_MSG  = "INIT_ERROR\n\0";
 const char* I2C_CRC_ERROR_MSG   = "CHECKSUM_ERROR\n\0";
 const char* I2C_READ_ERROR_MSG  = "READING_ERROR\n\0";
+const int   I2C_RESET_DURATION  = 300;
 
 void ReadQoutSensor()
 {
@@ -85,16 +86,17 @@ void ReadQoutSensor()
 
     if (i2c_state == I2C_INIT)
     {
-        if (tick_i2c <= 300)
+        if (tick_i2c < I2C_RESET_DURATION)
         {
             HAL_GPIO_WritePin(CmdQout_GPIO_Port, CmdQout_Pin, GPIO_PIN_SET);
         }
-        else if (tick_i2c <= 400)
+        else if (tick_i2c == I2C_RESET_DURATION)
         {
             HAL_GPIO_WritePin(CmdQout_GPIO_Port, CmdQout_Pin, GPIO_PIN_RESET);
         }
         else
         {
+            HAL_GPIO_WritePin(CmdQout_GPIO_Port, CmdQout_Pin, GPIO_PIN_RESET);
             uint8_t status = HAL_I2C_Master_Transmit(p_hi2c1, SFM3219_ADDRESS<<1, cmd, 3, 1000);
             if (status == HAL_OK)
             {
