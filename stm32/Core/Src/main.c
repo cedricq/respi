@@ -83,7 +83,28 @@ static void MX_TIM2_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+//extern void (**__init_array_start)();
+//extern void (**__init_array_end)();
+//
+////inline void static_init()
+//void static_init()
+//{
+//	for (void (**p)() = __init_array_start; p < __init_array_end; ++p)
+//		(*p)();
+//}
+//
+//void __late_init() {
+// extern void (*__ctors_start__[])(void) __attribute__((weak));
+// extern void (*__ctors_end__[])(void) __attribute__((weak));
+// int count = __ctors_end__ - __ctors_start__;
+// int i;
+// for (i = 0; i < count; i++) {
+// __ctors_start__[i]();
+// }
+//}
+
 /* USER CODE END 0 */
+
 
 /**
   * @brief  The application entry point.
@@ -150,29 +171,12 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  int a = 0;
-  int flag = 0;
+  //int a = 0;
+  //int flag = 0;
 
   while (1)
   {
     tick_polled();
-
-    a++;
-    if(a/500000 >= 1)
-    {
-        if (flag != 0)
-        {
-            HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
-            flag = 0;
-        }
-        else
-        {
-            HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
-            flag = 1;
-        }
-        a = 0;
-    }
-
 
     /* USER CODE END WHILE */
 
@@ -266,10 +270,10 @@ static void MX_ADC1_Init(void)
   hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
   hadc1.Init.LowPowerAutoWait = DISABLE;
   hadc1.Init.Overrun = ADC_OVR_DATA_OVERWRITTEN;
-  //if (HAL_ADC_Init(&hadc1) != HAL_OK)
-  //{
-  //  Error_Handler();
-  //}
+  if (HAL_ADC_Init(&hadc1) != HAL_OK)
+  {
+    Error_Handler();
+  }
 
   /** Configure Regular Channel
   */
@@ -279,37 +283,37 @@ static void MX_ADC1_Init(void)
   sConfig.SamplingTime = ADC_SAMPLETIME_7CYCLES_5;
   sConfig.OffsetNumber = ADC_OFFSET_NONE;
   sConfig.Offset = 0;
-  //if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  //{
-  //  Error_Handler();
-  //}
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
 
   /** Configure Regular Channel
   */
   sConfig.Channel = ADC_CHANNEL_11;
   sConfig.Rank = ADC_REGULAR_RANK_2;
-  //if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  //{
-  //  Error_Handler();
-  //}
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
 
   /** Configure Regular Channel
   */
   sConfig.Channel = ADC_CHANNEL_6;
   sConfig.Rank = ADC_REGULAR_RANK_3;
-  //if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  //{
-  //  Error_Handler();
-  //}
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
 
   /** Configure Regular Channel
   */
   sConfig.Channel = ADC_CHANNEL_7;
   sConfig.Rank = ADC_REGULAR_RANK_4;
-  //if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  //{
-  //  Error_Handler();
-  //}
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
   /* USER CODE BEGIN ADC1_Init 2 */
 
   /* USER CODE END ADC1_Init 2 */

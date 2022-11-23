@@ -65,14 +65,14 @@ public:
 private:
     BreathinStates  state_ {EXPI};
 
-    DataItem main_motor_target_ {DataItem(MAIN_MOTOR_TARGET_ID, true)};
-    DataItem peep_motor_target_ {DataItem(PEEP_MOTOR_TARGET_ID, true)};
-    DataItem valve_ie_target_   {DataItem(VALVE_IE_TARGET_ID, true)};
-    DataItem test_target_       {DataItem(TEST_TARGET_ID, true)};
+    DataItem main_motor_target_ {MAIN_MOTOR_TARGET_ID, true};
+    DataItem peep_motor_target_ {PEEP_MOTOR_TARGET_ID, true};
+    DataItem valve_ie_target_   {VALVE_IE_TARGET_ID, true};
+    DataItem test_target_       {TEST_TARGET_ID, true};
 
-    DataItem breath_state_      {DataItem(BREATH_STATE_ID, true)};
-    DataItem inspi_time_        {DataItem(INSPI_TIME_ID, true)};
-    DataItem expi_time_         {DataItem(EXPI_TIME_ID, true)};
+    DataItem breath_state_      {BREATH_STATE_ID, true};
+    DataItem inspi_time_        {INSPI_TIME_ID, true};
+    DataItem expi_time_         {EXPI_TIME_ID, true};
 
     Datagram& time_ {DataItem(TIME_ID).get()};
     int32_t time_ini_ {0};

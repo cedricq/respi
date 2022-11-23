@@ -1,23 +1,14 @@
 set(CMAKE_SYSTEM_NAME Generic)
 set(CMAKE_SYSTEM_PROCESSOR ARM)
 
-#set(ARM_TOOLCHAIN_DIR /opt/gcc-arm-none-eabi-10.3-2021.10/bin)
 set(TOOLCHAIN_PREFIX  arm-none-eabi)
 
 set(CMAKE_C_COMPILER 			"${ARM_TOOLCHAIN_DIR}/${TOOLCHAIN_PREFIX}-gcc")
 set(CMAKE_CXX_COMPILER 			"${ARM_TOOLCHAIN_DIR}/${TOOLCHAIN_PREFIX}-g++")
 set(CMAKE_ASM_COMPILER 			"${ARM_TOOLCHAIN_DIR}/${TOOLCHAIN_PREFIX}-g++")
 
-add_definitions(     
-    -DSTM32F302x8
-    -DUSE_HAL_DRIVER
-    -DDEBUG
-    -DUSE_FULL_ASSERT 
-    -DHSE_VALUE=8000000      
-    )
-      
 set(GCC_CROSS_BASE_FLAGS_DEFAULT
-        "-mcpu=cortex-m4 -g -Og -ffunction-sections -fdata-sections -Wall -Wfatal-errors -fstack-usage --specs=nano.specs -mfloat-abi=hard -mthumb "
+        "-mcpu=cortex-m4 -g3 -O1 -ffunction-sections -fdata-sections -Wall -Wfatal-errors -fstack-usage --specs=nano.specs -mfloat-abi=hard -mthumb "
         # -Werror
 )
 
@@ -26,7 +17,7 @@ set(GCC_CROSS_BASE_FLAGS_CPP
 )
 
 set(GCC_CROSS_BASE_FLAGS_C
-        "${GCC_CROSS_BASE_FLAGS_DEFAULT} " 
+        "${GCC_CROSS_BASE_FLAGS_DEFAULT} -std=gnu99 " 
 )
 
 set(GCC_CROSS_BASE_FLAGS_ASM
@@ -34,7 +25,7 @@ set(GCC_CROSS_BASE_FLAGS_ASM
 )
 
 set(GCC_CROSS_BASE_FLAGS_LINKER
-        "-mcpu=cortex-m4 -T${CMAKE_CURRENT_SOURCE_DIR}/stm32/STM32F302R8TX_FLASH.ld --specs=nosys.specs -Wl,-Map=respi.map -Wl,--gc-sections -static -mfloat-abi=hard -mthumb -u _printf_float "
+        "-mcpu=cortex-m4 --specs=nosys.specs -Wl,--gc-sections  -mfloat-abi=hard -mthumb -u _printf_float "
 )
                 
 set(CMAKE_C_FLAGS               ${GCC_CROSS_BASE_FLAGS_C})

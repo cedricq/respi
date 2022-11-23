@@ -171,13 +171,33 @@ public:
         InitADC();
         InitQoutSensor();
     }
+
+    int a = 0;
+    int flag = 0;
+
     virtual void Run()
     {
         static DataItem time(TIME_ID, true);
         time.set(time.get().value + 1 );
 
-        ReadQoutSensor();
+        //ReadQoutSensor();
         UpdateMeasurements();
+
+		a++;
+		if(a >= 1000)
+		{
+			if (flag != 0)
+			{
+				HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
+				flag = 0;
+			}
+			else
+			{
+				HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
+				flag = 1;
+			}
+			a = 0;
+		}
     }
 };
 
