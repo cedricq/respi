@@ -18,7 +18,7 @@ IF(TEST)
 	FetchContent_MakeAvailable(googletest)
 	include(CTest)
 	
-	add_subdirectory (Arch)
+	add_subdirectory (infra)
 	
 ELSE()
 	add_definitions(     

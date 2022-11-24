@@ -15,8 +15,8 @@ IF(TEST)
 	set(TEST_SOURCES
 	    unit/Fibre_t.cpp
 		)	
-	add_executable (arch_test ${TEST_SOURCES} ${APP_SOURCES})
-	target_link_libraries(arch_test gtest_main ${PROJECT})
-	add_test(arch_test arch_test) 
+	add_executable (infra_test ${TEST_SOURCES} ${APP_SOURCES})
+	target_link_libraries(infra_test gtest_main ${PROJECT})
+	add_test(infra_test infra_test) 
 ENDIF()
 
