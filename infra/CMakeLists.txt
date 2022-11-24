@@ -3,6 +3,7 @@ set(PROJECT infra)
 set(APP_SOURCES
     src/DataAccessor.cpp
     src/Fibre.cpp
+    src/crc.cpp
 	)
 
 add_library (${PROJECT} STATIC ${APP_SOURCES})

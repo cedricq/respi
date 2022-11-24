@@ -14,7 +14,6 @@ target_include_directories (${PROJECT} PUBLIC
 
 set(MAIN_SOURCES
     Src/main.c
-    Src/crc.cpp
     Src/stm32f3xx_hal_msp.c
     Src/stm32f3xx_it.c
     Src/system_stm32f3xx.c
