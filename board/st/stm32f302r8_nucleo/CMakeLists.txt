@@ -23,7 +23,7 @@ set(MAIN_SOURCES
 	)
 set(EXECUTABLE ${PROJECT_NAME}.elf)
 add_executable(${EXECUTABLE} ${MAIN_SOURCES})
-target_link_libraries (${EXECUTABLE} LINK_PUBLIC ${PROJECT} application)
+target_link_libraries (${EXECUTABLE} LINK_PUBLIC ${PROJECT} app)
 
 # Print executable size
 add_custom_command(TARGET ${EXECUTABLE}

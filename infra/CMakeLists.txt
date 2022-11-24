@@ -1,4 +1,4 @@
-set(PROJECT arch)
+set(PROJECT infra)
 
 set(APP_SOURCES
     src/DataAccessor.cpp

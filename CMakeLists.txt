@@ -32,8 +32,8 @@ ELSE()
 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map=${PROJECT_NAME}.map")
 	
 	add_subdirectory (board)
-	add_subdirectory (Arch)
-	add_subdirectory (Application)
+	add_subdirectory (infra)
+	add_subdirectory (app)
 ENDIF()
 
 

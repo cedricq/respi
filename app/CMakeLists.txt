@@ -1,4 +1,4 @@
-set(PROJECT application)
+set(PROJECT app)
 
 set(APP_SOURCES
     src/breath_machine.cpp
@@ -13,7 +13,7 @@ add_library (${PROJECT} OBJECT ${APP_SOURCES})
 target_include_directories (${PROJECT} PUBLIC 
 	${CMAKE_CURRENT_SOURCE_DIR}/inc 
 	)
-target_link_libraries (${PROJECT} LINK_PUBLIC bsp_stm32f302r8_nucleo arch)
+target_link_libraries (${PROJECT} LINK_PUBLIC bsp_stm32f302r8_nucleo infra)
 	
 IF(TEST)
 	#set(TEST_SOURCES
