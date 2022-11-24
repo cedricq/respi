@@ -1,29 +1,29 @@
-set(PROJECT stm32)
+set(PROJECT bsp_stm32f302r8_nucleo)
 
-file(GLOB SOURCES 
-	Drivers/STM32F3xx_HAL_Driver/Src/*.c
+file(GLOB BSP_SOURCES 
+	libs/STM32F3xx_HAL_Driver/Src/*.c
 )
-set(SOURCES ${SOURCES})
-add_library (${PROJECT} OBJECT ${SOURCES})
+set(BSP_SOURCES ${BSP_SOURCES})
+add_library (${PROJECT} OBJECT ${BSP_SOURCES})
 target_include_directories (${PROJECT} PUBLIC 
-	${CMAKE_CURRENT_SOURCE_DIR}/Drivers/STM32F3xx_HAL_Driver/Inc
-	${CMAKE_CURRENT_SOURCE_DIR}/Drivers/CMSIS/Device/ST/STM32F3xx/Include
-	${CMAKE_CURRENT_SOURCE_DIR}/Drivers/CMSIS/Include
-	${CMAKE_CURRENT_SOURCE_DIR}/Core/Inc
+	${CMAKE_CURRENT_SOURCE_DIR}/libs/STM32F3xx_HAL_Driver/Inc
+	${CMAKE_CURRENT_SOURCE_DIR}/libs/CMSIS/Device/ST/STM32F3xx/Include
+	${CMAKE_CURRENT_SOURCE_DIR}/libs/CMSIS/Include
+	${CMAKE_CURRENT_SOURCE_DIR}/Inc
 	)
 
 set(MAIN_SOURCES
-    Core/Src/main.c
-    Core/Src/crc.cpp
-    Core/Src/stm32f3xx_hal_msp.c
-    Core/Src/stm32f3xx_it.c
-    Core/Src/system_stm32f3xx.c
+    Src/main.c
+    Src/crc.cpp
+    Src/stm32f3xx_hal_msp.c
+    Src/stm32f3xx_it.c
+    Src/system_stm32f3xx.c
 	# STARTUP SCRIPT
-    Core/Startup/startup_stm32f302r8tx.s
+    Startup/startup_stm32f302r8tx.s
 	)
 set(EXECUTABLE ${PROJECT_NAME}.elf)
 add_executable(${EXECUTABLE} ${MAIN_SOURCES})
-target_link_libraries (${EXECUTABLE} LINK_PUBLIC stm32 application)
+target_link_libraries (${EXECUTABLE} LINK_PUBLIC ${PROJECT} application)
 
 # Print executable size
 add_custom_command(TARGET ${EXECUTABLE}

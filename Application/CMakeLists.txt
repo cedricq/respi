@@ -13,7 +13,7 @@ add_library (${PROJECT} OBJECT ${APP_SOURCES})
 target_include_directories (${PROJECT} PUBLIC 
 	${CMAKE_CURRENT_SOURCE_DIR}/inc 
 	)
-target_link_libraries (${PROJECT} LINK_PUBLIC stm32 arch)
+target_link_libraries (${PROJECT} LINK_PUBLIC bsp_stm32f302r8_nucleo arch)
 	
 IF(TEST)
 	#set(TEST_SOURCES

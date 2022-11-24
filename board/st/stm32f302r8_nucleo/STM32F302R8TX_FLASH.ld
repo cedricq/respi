@@ -52,7 +52,7 @@ MEMORY
 /* Sections */
 SECTIONS
 {
-    /* The startup code into "FLASH" Rom type memory */
+  /* The startup code into "FLASH" Rom type memory */
   .isr_vector :
   {
     . = ALIGN(4);

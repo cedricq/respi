@@ -28,10 +28,10 @@ ELSE()
 	    -DUSE_FULL_ASSERT 
 	    -DHSE_VALUE=8000000      
 	    )
-	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -T${CMAKE_CURRENT_SOURCE_DIR}/stm32/STM32F302R8TX_FLASH.ld")
+	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -T${CMAKE_CURRENT_SOURCE_DIR}/board/st/stm32f302r8_nucleo/STM32F302R8TX_FLASH.ld")
 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map=${PROJECT_NAME}.map")
 	
-	add_subdirectory (stm32)
+	add_subdirectory (board)
 	add_subdirectory (Arch)
 	add_subdirectory (Application)
 ENDIF()
