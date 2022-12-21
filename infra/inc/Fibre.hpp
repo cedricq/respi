@@ -44,9 +44,7 @@ public:
 
 private:
     FibreManager();
-
     std::vector<std::shared_ptr<Fibre>> fibres_;
-
 };
 
 #endif /* INC_FIBRE_HPP_ */
