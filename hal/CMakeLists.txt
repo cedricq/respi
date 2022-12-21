@@ -1,18 +1,14 @@
-set(PROJECT app)
+set(PROJECT hal)
 
 set(APP_SOURCES
-    src/breath_machine.cpp
-    src/commands.cpp
-    src/measurements.cpp
-    src/print_output.cpp
-    src/trigger.cpp
+    src/I2C.cpp
 	)
 
 add_library (${PROJECT} OBJECT ${APP_SOURCES})
 target_include_directories (${PROJECT} PUBLIC 
 	${CMAKE_CURRENT_SOURCE_DIR}/inc 
 	)
-target_link_libraries (${PROJECT} LINK_PUBLIC bsp_stm32f302r8_nucleo infra)
+#target_link_libraries (${PROJECT} LINK_PUBLIC bsp_stm32f302r8_nucleo infra)
 	
 IF(TEST)
 	#set(TEST_SOURCES

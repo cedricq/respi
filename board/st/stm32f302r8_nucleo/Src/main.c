@@ -22,7 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "threads.hpp"
+#include "Threads.hpp"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -82,26 +82,6 @@ static void MX_TIM2_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
-//extern void (**__init_array_start)();
-//extern void (**__init_array_end)();
-//
-////inline void static_init()
-//void static_init()
-//{
-//	for (void (**p)() = __init_array_start; p < __init_array_end; ++p)
-//		(*p)();
-//}
-//
-//void __late_init() {
-// extern void (*__ctors_start__[])(void) __attribute__((weak));
-// extern void (*__ctors_end__[])(void) __attribute__((weak));
-// int count = __ctors_end__ - __ctors_start__;
-// int i;
-// for (i = 0; i < count; i++) {
-// __ctors_start__[i]();
-// }
-//}
 
 /* USER CODE END 0 */
 
@@ -171,13 +151,9 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  //int a = 0;
-  //int flag = 0;
-
   while (1)
   {
     tick_polled();
-
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

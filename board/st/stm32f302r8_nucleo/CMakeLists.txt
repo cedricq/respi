@@ -18,7 +18,7 @@ set(MAIN_SOURCES
     Src/stm32f3xx_it.c
     Src/system_stm32f3xx.c
 	# STARTUP SCRIPT
-    Startup/startup_stm32f302r8tx.s
+    Src/startup_stm32f302r8tx.s
 	)
 set(EXECUTABLE ${PROJECT_NAME}.elf)
 add_executable(${EXECUTABLE} ${MAIN_SOURCES})

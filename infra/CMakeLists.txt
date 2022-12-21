@@ -3,6 +3,7 @@ set(PROJECT infra)
 set(APP_SOURCES
     src/DataAccessor.cpp
     src/Fibre.cpp
+    src/Threads.cpp
     src/crc.cpp
 	)
 
