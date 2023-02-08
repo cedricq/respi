@@ -31,10 +31,10 @@ build/target/Makefile:
 	@echo ${CURRENT_DIR}
 	@echo $(CURRENT_DIR)
 	mkdir -p build/target
-	cd build/target && cmake -G "Unix Makefiles" -DARM_TOOLCHAIN_DIR=${ARM_GCC_BIN_FOLDER} -DCMAKE_TOOLCHAIN_FILE=${ARM_TOOLCHAIN_FILE} -DCMAKE_BUILD_TYPE:STRING=release $(CURRENT_DIR)
+	cd build/target && cmake -G "Unix Makefiles" -DARM_TOOLCHAIN_DIR=${ARM_GCC_BIN_FOLDER} -DCMAKE_TOOLCHAIN_FILE=${ARM_TOOLCHAIN_FILE} -DCMAKE_BUILD_TYPE:STRING=debug $(CURRENT_DIR)
 
 build-target: config-target
-	cd build/target && $(MAKE) -j8
+	cd build/target && $(MAKE) -j8 VERBOSE=1
 
 clean-target:
 	rm -rf build/target

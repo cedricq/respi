@@ -30,6 +30,8 @@ public:
 
     virtual void Run()
     {
+        test_target_.set(500);
+
         switch (state_)
         {
         default:

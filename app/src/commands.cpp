@@ -11,8 +11,8 @@ struct PWM
     uint32_t period;
 };
 
-const PWM pwm1 = {.pwm = TIM15->CCR1, .period = TIM15_PERIOD_TICKS};
-const PWM pwm2 = {.pwm = TIM15->CCR2, .period = TIM15_PERIOD_TICKS};
+const PWM pwm1 = {.pwm = TIM15->CCR1, .period = TIM15_PERIOD_TICKS};    // PB14
+const PWM pwm2 = {.pwm = TIM15->CCR2, .period = TIM15_PERIOD_TICKS};    // PB15
 const PWM pwm3 = {.pwm = TIM2->CCR1,  .period = TIM2_PERIOD_TICKS};     // PA5
 const PWM pwm4 = {.pwm = TIM2->CCR3,  .period = TIM2_PERIOD_TICKS};     // PB10
 
@@ -66,6 +66,7 @@ public:
         static DataItem valve_ie_target(VALVE_IE_TARGET_ID);
         static DataItem test_target(TEST_TARGET_ID);
 
+        // DAC: PA4
         DAC1->DHR12R1 = TargetToDAC(main_motor_target.get().value, main_motor_target.get().div);
         UpdatePWM(pwm1, valve_ie_target.get().value, valve_ie_target.get().div);
         UpdatePWM(pwm2, peep_motor_target.get().value, peep_motor_target.get().div);

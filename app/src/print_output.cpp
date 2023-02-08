@@ -33,6 +33,7 @@ void printDatas(const std::vector<Datagram*> datagrams)
 void printTelePlot(const std::vector<Datagram*> datagrams)
 {
     char buffer[512]="";
+    int full_size = 0;
     for(const auto& data: datagrams)
     {
         int val = static_cast<int>(data->value);
@@ -40,17 +41,19 @@ void printTelePlot(const std::vector<Datagram*> datagrams)
         char txt[64];
         if ( div > 1)
         {
-            sprintf(txt, ">%s:%d.%3d", data->name, val / div, val % div);
+            int val_abs = val;
+            if (val < 0 ) val_abs = -val;
+
+            sprintf(txt, ">%s:%d.%d\r\n\0", data->name, val / div, val_abs % div);
         }
         else
         {
-            sprintf(txt, ">%s:%d", data->name, val);
+            sprintf(txt, ">%s:%d\r\n\0", data->name, val);
         }
         strcat(buffer, txt);
-        strcat(buffer, "\r\n");
+        full_size += strlen(txt);
     }
-    strcat(buffer, "\0");
-    HAL_UART_Transmit_DMA(p_huart3, (uint8_t*)buffer, (uint8_t)(strlen(buffer)));
+    HAL_UART_Transmit_DMA(p_huart3, (uint8_t*)buffer, full_size);
 }
 
 
@@ -59,7 +62,7 @@ class PrintFibre : public Fibre
 public:
     PrintFibre(): Fibre("PrintFibre")
     {
-        FibreManager& mgr = FibreManager::getInstance(THREAD_POLLED_ID);
+        FibreManager& mgr = FibreManager::getInstance(THREAD_10MS_ID);
         mgr.Add(std::shared_ptr<Fibre>(this));
     }
 
