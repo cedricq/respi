@@ -20,7 +20,7 @@ uint32_t adc_buf[ADC_BUF_LEN];
 #define SFM3219_ADDRESS     0x2E
 #define SFM3219_START_AIR   0x3608
 
-const int32_t offsetQout = -57;
+const int32_t offsetSensirion = -24576;
 
 const int32_t offsetPout = -366;
 const int32_t offsetPprox = -366;
@@ -39,9 +39,9 @@ int32_t RawADCToVolt(int32_t raw)
     return raw * 330 / MAX_RAW_ADC;
 }
 
-int32_t RawSFM3019ToLmin(int32_t raw, int32_t offset)
+int32_t RawSFM3019ToLmin(int32_t raw)
 {
-    return ( ( 100 * ( raw + 24576 ) ) / 170 ) - offset;
+    return ( 100 * ( raw - offsetSensirion ) ) / 170 ;
 }
 
 int32_t RawToCal(int32_t raw, int32_t max_cal, int32_t max_raw)
@@ -62,7 +62,7 @@ i2c_states i2c_state = I2C_INIT;
 
 uint8_t crc = 0;
 uint8_t i2c_retry = 0;
-int32_t rawQout = 0;
+int16_t rawQout = 0;
 uint8_t cmd[3] = {0x36, 0x08, 0x00};
 
 void InitQoutSensor()
@@ -74,69 +74,51 @@ void InitQoutSensor()
     i2c_state = I2C_INIT;
 }
 
-const char* I2C_INIT_ERROR_MSG  = "INIT_ERROR\n\0";
-const char* I2C_CRC_ERROR_MSG   = "CHECKSUM_ERROR\n\0";
-const char* I2C_READ_ERROR_MSG  = "READING_ERROR\n\0";
 const int   I2C_RESET_DURATION  = 300;
+uint8_t i2c_rcv_buff[3] = {0x00, 0x00, 0x00};
+int i2c_cnt = 0;
+
+void I2C1_IRQHandler()
+{
+    i2c_state = I2C_READ;
+    i2c_cnt++;
+}
 
 void ReadQoutSensor()
 {
     static int tick_i2c = 0;
-    rawQout = -24576;
 
     if (i2c_state == I2C_INIT)
     {
-        if (tick_i2c < I2C_RESET_DURATION)
+        if (tick_i2c < I2C_RESET_DURATION / 2)
         {
             HAL_GPIO_WritePin(CmdQout_GPIO_Port, CmdQout_Pin, GPIO_PIN_SET);
         }
-        else if (tick_i2c == I2C_RESET_DURATION)
+        else if (tick_i2c < I2C_RESET_DURATION)
         {
             HAL_GPIO_WritePin(CmdQout_GPIO_Port, CmdQout_Pin, GPIO_PIN_RESET);
         }
+        else if (tick_i2c == I2C_RESET_DURATION)
+        {
+            I2C1_ClearBusyFlagErratum();
+        }
+        else if (tick_i2c == I2C_RESET_DURATION + 1 )
+        {
+            HAL_I2C_Master_Transmit_IT(p_hi2c1, SFM3219_ADDRESS<<1, cmd, 3);
+        }
         else
         {
-            HAL_GPIO_WritePin(CmdQout_GPIO_Port, CmdQout_Pin, GPIO_PIN_RESET);
-            uint8_t status = HAL_I2C_Master_Transmit(p_hi2c1, SFM3219_ADDRESS<<1, cmd, 3, 1000);
-            if (status == HAL_OK)
-            {
-                i2c_state = I2C_READ;
-                i2c_retry = 0;
-            }
-            else
-            {
-                printMessage(I2C_INIT_ERROR_MSG);
-            }
             tick_i2c = 0;
         }
         tick_i2c++;
     }
     else if (i2c_state == I2C_READ)
     {
-        uint8_t i2c_rcv_buff[3] = {0x00, 0x00, 0x00};
-        uint8_t status = HAL_I2C_Master_Receive(p_hi2c1, SFM3219_ADDRESS<<1, i2c_rcv_buff, 3, 1000);
-        if (status == HAL_OK)
+        if (SF04_CheckCrc (i2c_rcv_buff, 2, i2c_rcv_buff[2]) != CHECKSUM_ERROR)
         {
-            if (SF04_CheckCrc (i2c_rcv_buff, 2, i2c_rcv_buff[2]) != CHECKSUM_ERROR)
-            {
-                rawQout = (int16_t)(((uint16_t)i2c_rcv_buff[0])<<8 | i2c_rcv_buff[0]);
-            }
-            else
-            {
-                printMessage(I2C_CRC_ERROR_MSG);
-                i2c_retry++;
-            }
+            rawQout = (int16_t)(((uint16_t)i2c_rcv_buff[0])<<8 | (uint16_t)(i2c_rcv_buff[1]));
         }
-        else
-        {
-            printMessage(I2C_READ_ERROR_MSG);
-            i2c_retry++;
-        }
-        if (i2c_retry >= 10)
-        {
-            tick_i2c = 0;
-            i2c_state = I2C_INIT;
-        }
+        HAL_I2C_Master_Receive_IT(p_hi2c1, SFM3219_ADDRESS<<1, i2c_rcv_buff, 3);
     }
 }
 
@@ -149,7 +131,7 @@ void UpdateMeasurements()
     static DataItem motor_current(MOTOR_CURRENT_ID, true);
     static DataItem motor_speed(MOTOR_SPEED_ID, true);
 
-    qout.set(RawSFM3019ToLmin(rawQout, offsetQout));
+    qout.set(RawSFM3019ToLmin(rawQout));
     pout.set(VoltageTo01mbar( RawADCToVolt( adc_buf[ADC_IN1_PA0_POUT] ), offsetPout ));
     pprox.set(VoltageTo01mbar( RawADCToVolt( adc_buf[ADC_IN11_PB0_PROX] ), offsetPprox ));
     motor_current.set(RawToCal(adc_buf[ADC_IN6_PC0_I_MOT], MAX_CURRENT, MAX_RAW_ADC));
@@ -180,7 +162,7 @@ public:
         static DataItem time(TIME_ID, true);
         time.set(time.get().value + 1 );
 
-        //ReadQoutSensor();
+        ReadQoutSensor();
         UpdateMeasurements();
 
 		a++;

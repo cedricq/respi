@@ -65,6 +65,9 @@ extern TIM_HandleTypeDef*  p_htim15;
 extern UART_HandleTypeDef* p_huart3;
 extern DMA_HandleTypeDef*  p_hdma_usart3_tx;
 
+extern void I2C1_IRQHandler();
+void I2C1_ClearBusyFlagErratum();
+
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

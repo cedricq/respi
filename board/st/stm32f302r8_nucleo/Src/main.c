@@ -338,6 +338,105 @@ static void MX_DAC_Init(void)
 
 }
 
+
+void I2C1_ClearBusyFlagErratum()
+{
+  GPIO_InitTypeDef GPIO_InitStructure;
+
+  // 1. Clear PE bit.
+  hi2c1.Instance->CR1 &= ~(0x0001);
+
+  //  2. Configure the SCL and SDA I/Os as General Purpose Output Open-Drain, High level (Write 1 to GPIOx_ODR).
+  GPIO_InitStructure.Mode         = GPIO_MODE_OUTPUT_OD;
+  GPIO_InitStructure.Alternate    = GPIO_AF4_I2C1;
+  GPIO_InitStructure.Pull         = GPIO_NOPULL;
+  GPIO_InitStructure.Speed        = GPIO_SPEED_FREQ_HIGH;
+
+  // SCL
+  GPIO_InitStructure.Pin          = GPIO_PIN_15;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStructure);
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, GPIO_PIN_SET);
+
+  // SDA
+  GPIO_InitStructure.Pin          = GPIO_PIN_7;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStructure);
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_SET);
+
+  // 3. Check SCL and SDA High level in GPIOx_IDR.
+  while (GPIO_PIN_SET != HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_15))
+  {
+    asm("nop");
+  }
+
+  while (GPIO_PIN_SET != HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_7))
+  {
+    asm("nop");
+  }
+
+  // 4. Configure the SDA I/O as General Purpose Output Open-Drain, Low level (Write 0 to GPIOx_ODR).
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_RESET);
+
+  //  5. Check SDA Low level in GPIOx_IDR.
+  while (GPIO_PIN_RESET != HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_7))
+  {
+    asm("nop");
+  }
+
+  // 6. Configure the SCL I/O as General Purpose Output Open-Drain, Low level (Write 0 to GPIOx_ODR).
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, GPIO_PIN_RESET);
+
+  //  7. Check SCL Low level in GPIOx_IDR.
+  while (GPIO_PIN_RESET != HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_15))
+  {
+    asm("nop");
+  }
+
+  // 8. Configure the SCL I/O as General Purpose Output Open-Drain, High level (Write 1 to GPIOx_ODR).
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, GPIO_PIN_SET);
+
+  // 9. Check SCL High level in GPIOx_IDR.
+  while (GPIO_PIN_SET != HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_15))
+  {
+    asm("nop");
+  }
+
+  // 10. Configure the SDA I/O as General Purpose Output Open-Drain , High level (Write 1 to GPIOx_ODR).
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_SET);
+
+  // 11. Check SDA High level in GPIOx_IDR.
+  while (GPIO_PIN_SET != HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_7))
+  {
+    asm("nop");
+  }
+
+  // 12. Configure the SCL and SDA I/Os as Alternate function Open-Drain.
+  GPIO_InitStructure.Mode         = GPIO_MODE_AF_OD;
+  GPIO_InitStructure.Alternate    = GPIO_AF4_I2C1;
+
+  GPIO_InitStructure.Pin          = GPIO_PIN_7;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStructure);
+
+  GPIO_InitStructure.Pin          = GPIO_PIN_15;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+  // 13. Set SWRST bit in I2Cx_CR1 register.
+  hi2c1.Instance->CR1 |= 0x8000;
+
+  asm("nop");
+
+  // 14. Clear SWRST bit in I2Cx_CR1 register.
+  hi2c1.Instance->CR1 &= ~0x8000;
+
+  asm("nop");
+
+  // 15. Enable the I2C peripheral by setting the PE bit in I2Cx_CR1 register
+  hi2c1.Instance->CR1 |= 0x0001;
+
+  // Call initialization function.
+  HAL_I2C_Init(&hi2c1);
+}
+
+
 /**
   * @brief I2C1 Initialization Function
   * @param None
@@ -381,6 +480,9 @@ static void MX_I2C1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN I2C1_Init 2 */
+
+  HAL_NVIC_SetPriority(I2C1_EV_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(I2C1_EV_IRQn);
 
   /* USER CODE END I2C1_Init 2 */
 
@@ -559,10 +661,10 @@ static void MX_DMA_Init(void)
 
   /* DMA interrupt init */
   /* DMA1_Channel1_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 1, 0);
   //HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
   /* DMA1_Channel2_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Channel2_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(DMA1_Channel2_IRQn, 1, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel2_IRQn);
 
 }
@@ -586,7 +688,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(CmdQout_GPIO_Port, CmdQout_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(CmdQout_GPIO_Port, CmdQout_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, EN_ACT_Pin|IN1_ACT_Pin|IN2_ACT_Pin, GPIO_PIN_RESET);

@@ -1,13 +1,15 @@
 # ARM_GCC_BIN_FOLDER needs to be set as part of your environment variables 
 # ARM_GCC_BIN_FOLDER=$(CURRENT_DIR)/../gcc-arm-none-eabi-9-2020-q2-update/bin
 
+CURRENT_DIR=$(shell pwd)
+
+# export ARM_GCC_BIN_FOLDER="/c/arm-gcc/11.3_rel1/bin"
+
 ARM_TOOLCHAIN_FILE = $(CURRENT_DIR)/arm-none-eabi-gcc.cmake
 
 define RUN_UNITTEST
 	$(if $(ARG), cd $(1) && ctest -V -R $(ARG), cd $(1) && ctest --timeout 240)
 endef
-
-CURRENT_DIR=$(shell pwd)
 
 # Default config target                                                                                                                                                                                   
 config: config-target
@@ -26,8 +28,10 @@ clean:
 # Config and build for target
 config-target: build/target/Makefile
 build/target/Makefile:
+	@echo ${CURRENT_DIR}
+	@echo $(CURRENT_DIR)
 	mkdir -p build/target
-	cd build/target && cmake -G "Unix Makefiles" -DARM_TOOLCHAIN_DIR=${ARM_GCC_BIN_FOLDER} -DCMAKE_TOOLCHAIN_FILE=$(ARM_TOOLCHAIN_FILE) -DCMAKE_BUILD_TYPE:STRING=release $(CURRENT_DIR)
+	cd build/target && cmake -G "Unix Makefiles" -DARM_TOOLCHAIN_DIR=${ARM_GCC_BIN_FOLDER} -DCMAKE_TOOLCHAIN_FILE=${ARM_TOOLCHAIN_FILE} -DCMAKE_BUILD_TYPE:STRING=release $(CURRENT_DIR)
 
 build-target: config-target
 	cd build/target && $(MAKE) -j8

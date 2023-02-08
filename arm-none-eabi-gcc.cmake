@@ -3,12 +3,12 @@ set(CMAKE_SYSTEM_PROCESSOR ARM)
 
 set(TOOLCHAIN_PREFIX  arm-none-eabi)
 
-set(CMAKE_C_COMPILER 			"${ARM_TOOLCHAIN_DIR}/${TOOLCHAIN_PREFIX}-gcc")
-set(CMAKE_CXX_COMPILER 			"${ARM_TOOLCHAIN_DIR}/${TOOLCHAIN_PREFIX}-g++")
-set(CMAKE_ASM_COMPILER 			"${ARM_TOOLCHAIN_DIR}/${TOOLCHAIN_PREFIX}-g++")
+set(CMAKE_C_COMPILER 			"${ARM_TOOLCHAIN_DIR}/${TOOLCHAIN_PREFIX}-gcc.exe")
+set(CMAKE_CXX_COMPILER 			"${ARM_TOOLCHAIN_DIR}/${TOOLCHAIN_PREFIX}-g++.exe")
+set(CMAKE_ASM_COMPILER 			"${ARM_TOOLCHAIN_DIR}/${TOOLCHAIN_PREFIX}-g++.exe")
 
 set(GCC_CROSS_BASE_FLAGS_DEFAULT
-        "-mcpu=cortex-m4 -g3 -O1 -ffunction-sections -fdata-sections -Wall -Wfatal-errors -fstack-usage --specs=nano.specs -mfloat-abi=hard -mthumb "
+        "-mcpu=cortex-m4 -g3 -O0 -ffunction-sections -fdata-sections -Wall -Wfatal-errors -fstack-usage --specs=nano.specs -mfloat-abi=hard -mthumb "
         # -Werror
 )
 
