@@ -7,8 +7,8 @@
 #include <string.h>
 #include <vector>
 
-#define UART_BUF_LEN 255
-unsigned char UART3_rxBuffer[UART_BUF_LEN];
+#define UART_BUF_LEN 256
+char UART3_txBuffer[UART_BUF_LEN];
 
 DataItemId dataIds[] = {QOUT_ID, POUT_ID, PPROX_ID, MOTOR_SPEED_ID, MOTOR_CURRENT_ID, MAIN_MOTOR_TARGET_ID, PEEP_MOTOR_TARGET_ID, VALVE_IE_TARGET_ID, TEST_TARGET_ID, BREATH_STATE_ID};
 
@@ -33,7 +33,7 @@ void printDatas(const std::vector<Datagram*> datagrams)
 
 void printTelePlot(const std::vector<Datagram*> datagrams)
 {
-    char buffer[128]="";
+    UART3_txBuffer[0] = '\0';
 
     for(const auto& data: datagrams)
     {
@@ -42,10 +42,11 @@ void printTelePlot(const std::vector<Datagram*> datagrams)
         int div = static_cast<int>(data->div);
 
         sprintf(txt, ">%s:%d\n", data->name, val);
-        strcat(buffer, txt);
+        strcat(UART3_txBuffer, txt);
     }
-    strcat(buffer, "\n\0");
-    HAL_UART_Transmit_DMA(p_huart3, (uint8_t*)buffer, (uint8_t)(strlen(buffer)));
+    strcat(UART3_txBuffer, "\0");
+    volatile uint8_t sz = (uint8_t)(strlen(UART3_txBuffer));
+    HAL_UART_Transmit_DMA(p_huart3, (uint8_t*)UART3_txBuffer, sz);
 }
 
 
@@ -64,8 +65,7 @@ public:
         {
             datagrams_.push_back(&(DataItem(dataIds[i]).get()));
         }
-
-        HAL_UART_Receive_IT(p_huart3, UART3_rxBuffer, 1);
+        //HAL_UART_Receive_IT(p_huart3, UART3_rxBuffer, 1);
     }
 
     virtual void Run()
