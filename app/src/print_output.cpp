@@ -19,16 +19,17 @@ void printMessage(const char* message)
 
 void printDatas(const std::vector<Datagram*> datagrams)
 {
-    char buffer[512]="";
+    UART3_txBuffer[0] = '\0';
+
     for(const auto& data: datagrams)
     {
         char txt[64];
         sprintf(txt, "%d ", static_cast<int>(data->value));
-        strcat(buffer, txt);
+        strcat(UART3_txBuffer, txt);
     }
-    strcat(buffer, "\n\0");
+    strcat(UART3_txBuffer, "\n\0");
 
-    HAL_UART_Transmit_DMA(p_huart3, (uint8_t*)buffer, (uint8_t)(strlen(buffer)));
+    HAL_UART_Transmit_DMA(p_huart3, (uint8_t*)UART3_txBuffer, (uint8_t)(strlen(UART3_txBuffer)));
 }
 
 void printTelePlot(const std::vector<Datagram*> datagrams)
@@ -38,15 +39,11 @@ void printTelePlot(const std::vector<Datagram*> datagrams)
     for(const auto& data: datagrams)
     {
         char txt[32];
-        int val = static_cast<int>(data->value);
-        int div = static_cast<int>(data->div);
-
-        sprintf(txt, ">%s:%d\n", data->name, val);
+        sprintf(txt, ">%s:%d\n", data->name, static_cast<int>(data->value));
         strcat(UART3_txBuffer, txt);
     }
     strcat(UART3_txBuffer, "\0");
-    volatile uint8_t sz = (uint8_t)(strlen(UART3_txBuffer));
-    HAL_UART_Transmit_DMA(p_huart3, (uint8_t*)UART3_txBuffer, sz);
+    HAL_UART_Transmit_DMA(p_huart3, (uint8_t*)UART3_txBuffer, (uint8_t)(strlen(UART3_txBuffer)));
 }
 
 
