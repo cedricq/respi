@@ -10,7 +10,7 @@
 #define UART_BUF_LEN 255
 unsigned char UART3_rxBuffer[UART_BUF_LEN];
 
-DataItemId dataIds[] = {TIME_ID, QOUT_ID, POUT_ID, PPROX_ID, MOTOR_SPEED_ID, MOTOR_CURRENT_ID, MAIN_MOTOR_TARGET_ID, PEEP_MOTOR_TARGET_ID, VALVE_IE_TARGET_ID, TEST_TARGET_ID, BREATH_STATE_ID};
+DataItemId dataIds[] = {QOUT_ID, POUT_ID, PPROX_ID, MOTOR_SPEED_ID, MOTOR_CURRENT_ID, MAIN_MOTOR_TARGET_ID, PEEP_MOTOR_TARGET_ID, VALVE_IE_TARGET_ID, TEST_TARGET_ID, BREATH_STATE_ID};
 
 void printMessage(const char* message)
 {
@@ -27,33 +27,25 @@ void printDatas(const std::vector<Datagram*> datagrams)
         strcat(buffer, txt);
     }
     strcat(buffer, "\n\0");
+
     HAL_UART_Transmit_DMA(p_huart3, (uint8_t*)buffer, (uint8_t)(strlen(buffer)));
 }
 
 void printTelePlot(const std::vector<Datagram*> datagrams)
 {
-    char buffer[512]="";
-    int full_size = 0;
+    char buffer[128]="";
+
     for(const auto& data: datagrams)
     {
+        char txt[32];
         int val = static_cast<int>(data->value);
         int div = static_cast<int>(data->div);
-        char txt[64];
-        if ( div > 1)
-        {
-            int val_abs = val;
-            if (val < 0 ) val_abs = -val;
 
-            sprintf(txt, ">%s:%d.%d\r\n\0", data->name, val / div, val_abs % div);
-        }
-        else
-        {
-            sprintf(txt, ">%s:%d\r\n\0", data->name, val);
-        }
+        sprintf(txt, ">%s:%d\n", data->name, val);
         strcat(buffer, txt);
-        full_size += strlen(txt);
     }
-    HAL_UART_Transmit_DMA(p_huart3, (uint8_t*)buffer, full_size);
+    strcat(buffer, "\n\0");
+    HAL_UART_Transmit_DMA(p_huart3, (uint8_t*)buffer, (uint8_t)(strlen(buffer)));
 }
 
 
@@ -78,12 +70,8 @@ public:
 
     virtual void Run()
     {
-        static DataItem time(TIME_ID);
-        if (time.get().value%10 == 0)
-        {
-            printTelePlot(datagrams_);
-            //printDatas(datagrams_);
-        }
+        printTelePlot(datagrams_);
+        //printDatas(datagrams_);
     }
 
     std::vector<Datagram*> datagrams_ {};
