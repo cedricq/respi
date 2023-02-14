@@ -1,7 +1,7 @@
 #include "trigger.hpp"
 #include "breath_machine.hpp"
 
-const int INSPI_TIME             = 2000;
+const int INSPI_TIME             = 1000;
 const int EXPI_TIME              = 3000;
 
 const Datagram& TriggerI::time_ {DataItem(TIME_ID).get()};

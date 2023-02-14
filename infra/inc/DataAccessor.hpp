@@ -17,7 +17,7 @@ enum DataItemId
     MAIN_MOTOR_TARGET_ID    = 6,
     PEEP_MOTOR_TARGET_ID    = 7,
     VALVE_IE_TARGET_ID      = 8,
-    TEST_TARGET_ID          = 9,
+    PUSHPULL_TARGET_ID      = 9,
 
     // State
     BREATH_STATE_ID         = 10,
