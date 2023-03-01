@@ -9,10 +9,10 @@ struct PWM
     uint32_t period;
 };
 
-const PWM pwm1 = {.pwm = TIM15->CCR1, .period = TIM15_PERIOD_TICKS};    // PB14
-const PWM pwm2 = {.pwm = TIM15->CCR2, .period = TIM15_PERIOD_TICKS};    // PB15
-const PWM pwm3 = {.pwm = TIM2->CCR1,  .period = TIM2_PERIOD_TICKS};     // PA5
-const PWM pwm4 = {.pwm = TIM2->CCR3,  .period = TIM2_PERIOD_TICKS};     // PB10
+const PWM pwm1 = {.pwm = TIM15->CCR1, .period = TIM15_PERIOD_TICKS};    // PB14 - Valve not used
+const PWM pwm2 = {.pwm = TIM15->CCR2, .period = TIM15_PERIOD_TICKS};    // PB15 - Peep motor
+const PWM pwm3 = {.pwm = TIM2->CCR1,  .period = TIM2_PERIOD_TICKS};     // PA5  - Valve I/E
+const PWM pwm4 = {.pwm = TIM2->CCR3,  .period = TIM2_PERIOD_TICKS};     // PB10 - Actuonix
 
 int32_t TargetToDAC(int32_t target, int32_t div)
 {
@@ -63,9 +63,10 @@ public:
 
         // DAC: PA4
         DAC1->DHR12R1 = TargetToDAC(main_motor_target.get().value, main_motor_target.get().div);
-        UpdatePWM(pwm1, valve_ie_target.get().value, valve_ie_target.get().div);
+
+        UpdatePWM(pwm1, 0, 1);
         UpdatePWM(pwm2, peep_motor_target.get().value, peep_motor_target.get().div);
-        UpdatePWM(pwm3, 0, 1);
+        UpdatePWM(pwm3, valve_ie_target.get().value, valve_ie_target.get().div);
         UpdatePWM(pwm4, pushpull_target.get().value, pushpull_target.get().div);
 
     }
