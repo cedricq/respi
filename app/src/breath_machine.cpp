@@ -6,10 +6,13 @@
 #include "Fibre.hpp"
 #include "DataAccessor.hpp"
 
-const int TARGET_MOTOR_INSPI     = 500;
-const int TARGET_MOTOR_EXPI      = 200;
+const int TARGET_QOUT_INSPI     = 3000;
+const int TARGET_QOUT_EXPI      = 600;
+const int TARGET_MOT_INSPI      = 500;
+const int TARGET_MOT_EXPI       = 100;
 
-const int TARGET_MOTOR_PEEP      = 300;
+const int TARGET_MOTOR_PEEP_INSPI = 300;
+const int TARGET_MOTOR_PEEP_EXPI  = 150;
 
 const int TARGET_ON              = 999;
 const int TARGET_OFF             = 0;
@@ -32,6 +35,8 @@ public:
     {
         time_ini_ = time_.value;
         breath_state_.set(state_);
+
+        main_motor_target_.set(TARGET_MOT_EXPI);
     }
 
     virtual void Run()
@@ -41,9 +46,11 @@ public:
         default:
         case EXPI:
             expi_time_.set(time_.value - time_ini_);
-            peep_motor_target_.set(TARGET_MOTOR_PEEP);
-            main_motor_target_.set(TARGET_MOTOR_EXPI);
+            peep_motor_target_.set(TARGET_MOTOR_PEEP_EXPI);
+            target_qout_.set(TARGET_QOUT_EXPI);
             valve_ie_target_.set(TARGET_OFF);
+
+            main_motor_target_.set(TARGET_MOT_EXPI);
 
             // Push actuonix
             HAL_GPIO_WritePin(IN2_ACT_GPIO_Port, IN2_ACT_Pin, GPIO_PIN_RESET);
@@ -60,8 +67,11 @@ public:
             break;
         case INSPI:
             inspi_time_.set(time_.value - time_ini_);
-            peep_motor_target_.set(0);
-            main_motor_target_.set(TARGET_MOTOR_INSPI);
+
+            main_motor_target_.set(TARGET_MOT_INSPI);
+
+            peep_motor_target_.set(TARGET_MOTOR_PEEP_INSPI);
+            target_qout_.set(TARGET_QOUT_INSPI);
             valve_ie_target_.set(TARGET_ON);
 
             // Pull actuonix
@@ -78,10 +88,18 @@ public:
             }
             break;
         }
+
+
+        //int32_t tgt = (target_qout_.get().value * 18) / 1000 + 27;
+        //main_motor_target_.set(tgt);
+
     }
 
 private:
     BreathinStates  state_ {EXPI};
+
+    DataItem target_qout_ {QOUT_TARGET_ID, true};
+    DataItem target_pout_ {POUT_TARGET_ID, true};
 
     DataItem main_motor_target_ {MAIN_MOTOR_TARGET_ID, true};
     DataItem peep_motor_target_ {PEEP_MOTOR_TARGET_ID, true};

@@ -2,6 +2,8 @@ set(PROJECT app)
 
 set(APP_SOURCES
     src/breath_machine.cpp
+    #src/test_machine.cpp
+    
     src/commands.cpp
     src/measurements.cpp
     src/print_output.cpp

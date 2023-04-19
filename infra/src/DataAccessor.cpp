@@ -17,6 +17,10 @@ Datagram DataItems[] =
 [VALVE_IE_TARGET_ID] =      {.value = 0,     .reset = 0,  .min = 0,          .max = 1000,       .div = 10,      .name = "t_ie"},
 [PUSHPULL_TARGET_ID] =      {.value = 0,     .reset = 0,  .min = 0,          .max = 1000,       .div = 10,      .name = "t_pp"},
 
+// SI Targets
+[QOUT_TARGET_ID] =    {.value = 0,     .reset = 0,  .min = 0,          .max = 10000,      .div = 100,      .name = "t_qout"},
+[POUT_TARGET_ID] =    {.value = 0,     .reset = 0,  .min = 0,          .max = 600,        .div = 100,      .name = "t_pout"},
+
 // State
 [BREATH_STATE_ID] =     {.value = 0,    .reset = 0,  .min = 0,          .max = 1,          .div = 1,       .name = "breath"},
 [INSPI_TIME_ID] =       {.value = 0,    .reset = 0,  .min = 0,          .max = INT32_MAX,  .div = 1000,    .name = "m_ti"},

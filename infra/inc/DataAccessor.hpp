@@ -19,10 +19,15 @@ enum DataItemId
     VALVE_IE_TARGET_ID      = 8,
     PUSHPULL_TARGET_ID      = 9,
 
+    // SI Targets
+    //MOTOR_CONTROL_ID        = 20,
+    QOUT_TARGET_ID          = 10,
+    POUT_TARGET_ID          = 11,
+
     // State
-    BREATH_STATE_ID         = 10,
-    INSPI_TIME_ID           = 11,
-    EXPI_TIME_ID            = 12,
+    BREATH_STATE_ID         = 12,
+    INSPI_TIME_ID           = 13,
+    EXPI_TIME_ID            = 14,
 };
 
 struct Datagram
