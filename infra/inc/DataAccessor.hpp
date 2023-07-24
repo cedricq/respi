@@ -38,6 +38,7 @@ struct Datagram
     int32_t max;
     int32_t div;
     const char* name;
+    bool    override;
 };
 
 class DataItem
@@ -49,6 +50,8 @@ public:
 
     Datagram& get();
     void set(int32_t val);
+    void setOverride(int32_t val);
+    void releaseOverride();
     void reset();
 
 

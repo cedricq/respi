@@ -5,12 +5,43 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include <vector>
 
-#define UART_BUF_LEN 256
-char UART3_txBuffer[UART_BUF_LEN];
+#define UART_TX_BUF_LEN 256
+#define UART_RX_BUF_LEN 10
+char UART3_txBuffer[UART_TX_BUF_LEN];
+char UART3_rxBuffer[UART_RX_BUF_LEN];
+bool charReceived = false;
+bool frameReceived = false;
+unsigned int index_received = 0;
 
 DataItemId dataIds[] = {QOUT_ID, POUT_ID, PPROX_ID, MOTOR_SPEED_ID, MOTOR_CURRENT_ID, MAIN_MOTOR_TARGET_ID, PEEP_MOTOR_TARGET_ID, VALVE_IE_TARGET_ID, PUSHPULL_TARGET_ID, BREATH_STATE_ID};
+
+
+void newCharRxUART3(void)
+{
+    charReceived = true;
+}
+
+void waitForNewCharRxUART3(void)
+{
+    if ( charReceived && !frameReceived)
+    {
+        if ( UART3_rxBuffer[index_received]=='\n' )
+        {
+            index_received = 0;
+            frameReceived = true;
+        }
+        else
+        {
+            index_received++;
+            index_received = index_received % UART_RX_BUF_LEN;
+        }
+        HAL_UART_Receive_IT(p_huart3, (UART3_rxBuffer+index_received), 1);
+        charReceived = false;
+    }
+}
 
 void printMessage(const char* message)
 {
@@ -46,6 +77,29 @@ void printTelePlot(const std::vector<Datagram*> datagrams)
     HAL_UART_Transmit_DMA(p_huart3, (uint8_t*)UART3_txBuffer, (uint8_t)(strlen(UART3_txBuffer)));
 }
 
+char out[20];
+
+void readData()
+{
+    if (frameReceived && strchr(UART3_rxBuffer, '\n') != NULL && strchr(UART3_rxBuffer, ':') != NULL)
+    {
+        char * stop;
+        int index = 0;
+        int di = strtol((UART3_rxBuffer+index), &stop, 10);
+        index = stop - UART3_rxBuffer;
+        index++;
+        int val = strtol((UART3_rxBuffer+index), &stop, 10);
+
+        waitForNewCharRxUART3();
+        UART3_rxBuffer[0] = '\0';
+        printMessage(out);
+        frameReceived = false;
+
+        DataItem DI(di, true);
+        DI.setOverride(val);
+    }
+}
+
 
 class PrintFibre : public Fibre
 {
@@ -62,13 +116,14 @@ public:
         {
             datagrams_.push_back(&(DataItem(dataIds[i]).get()));
         }
-        //HAL_UART_Receive_IT(p_huart3, UART3_rxBuffer, 1);
+        HAL_UART_Receive_IT(p_huart3, (UART3_rxBuffer+index_received), 1);
     }
 
     virtual void Run()
     {
         printTelePlot(datagrams_);
         //printDatas(datagrams_);
+        readData();
     }
 
     std::vector<Datagram*> datagrams_ {};

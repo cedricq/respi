@@ -68,6 +68,9 @@ extern DMA_HandleTypeDef*  p_hdma_usart3_tx;
 extern void I2C1_IRQHandler();
 void I2C1_ClearBusyFlagErratum();
 
+extern void newCharRxUART3(void);
+extern void waitForNewCharRxUART3(void);
+
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
