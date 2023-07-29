@@ -8,6 +8,7 @@ set(APP_SOURCES
     src/measurements.cpp
     src/print_output.cpp
     src/trigger.cpp
+    src/blink_led.cpp
 	)
 
 add_library (${PROJECT} OBJECT ${APP_SOURCES})

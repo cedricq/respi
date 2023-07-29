@@ -28,7 +28,8 @@ enum ThreadID
 {
     THREAD_POLLED_ID,
     THREAD_1MS_ID,
-    THREAD_10MS_ID
+    THREAD_10MS_ID,
+	THREAD_1S_ID
 };
 
 

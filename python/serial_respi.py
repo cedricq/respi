@@ -5,28 +5,22 @@ import serial.tools.list_ports
 import datetime
 import threading
 import time
-import multiprocessing
-import os
 
 # for printing debugging messages in console
 dbg = 0
 
 gRoot = Tk()
-# gRoot.geometry("480x280")
 gRoot.title("Serial Console")
 sty = ttk.Style()
 sty.theme_use("alt")
 gRoot.columnconfigure(0, weight=1)
 gRoot.rowconfigure(0, weight=1)
-# sty.configure("gframe.TFrame",background="white")
 gFrame = ttk.LabelFrame(gRoot, text="Connection Setting", padding=10)
 gFrame.grid(column=1, row=1, sticky=(W, E))
 
 # Frame for COM messages
 gFrame21 = ttk.Frame(gRoot, padding=10)
 gFrame21.grid(column=2, row=1, sticky=(W))
-# gRoot.resizable(0,0)
-
 
 for x in range(10):
     gFrame.columnconfigure(x, weight=x)
@@ -57,7 +51,8 @@ baud_menu = ttk.OptionMenu(gFrame, baud_value_inside, "select baud rate", "9600"
                            '115200', '128000', '153600', '230400', '256000', '460800', '921600')
 baud_menu.grid(column=3, row=1, sticky=(E))
 
-
+com_menu = ttk.OptionMenu(gFrame, com_value_inside, *com_port_list)
+com_menu.grid(column=2, row=1, sticky=(E))
 def com_port_list_update():
     global ports
     global com_port_list
@@ -66,8 +61,7 @@ def com_port_list_update():
     com_port_list.insert(0, "Select an Option")
     if dbg == 1:
         print(com_port_list)
-    com_menu = ttk.OptionMenu(gFrame, com_value_inside, *com_port_list)
-    com_menu.grid(column=2, row=1, sticky=(E))
+
     # Frame for the COM LIST
     gRoot_com_list = Toplevel(gRoot)
     x = gRoot.winfo_x()
@@ -167,8 +161,6 @@ def submit_value():
         print(" Baud Rate {}".format(baud_value_inside.get()))
     serial_connect(com_value_inside.get(), baud_value_inside.get())
 
-
-
 Lb2 = Listbox(gFrame21, width=100, xscrollcommand=1)
 Lb2.grid(column=1, row=1, sticky=W + E)
 Sb2 = ttk.Scrollbar(gFrame21, orient='vertical')
@@ -251,49 +243,4 @@ for values in range(1,101):
    listbox.insert(END, values)
 """
 
-
-def donothing():
-    filewin = Toplevel(gRoot)
-    button = Button(filewin, text="Do nothing button")
-    button.pack()
-
-
-def About_me():
-    filewin = Toplevel(gRoot)
-    Label1 = Label(filewin, text="EXASUB.COM").pack()
-    button = Button(filewin, text="Quit", command=filewin.destroy)
-    button.pack()
-
-
-menubar = Menu(gRoot)
-filemenu = Menu(menubar, tearoff=0)
-filemenu.add_command(label="New", command=donothing)
-filemenu.add_command(label="Open", command=donothing)
-filemenu.add_command(label="Save", command=donothing)
-filemenu.add_command(label="Save as...", command=donothing)
-filemenu.add_command(label="Close", command=donothing)
-
-filemenu.add_separator()
-
-filemenu.add_command(label="Exit", command=gRoot.quit)
-menubar.add_cascade(label="File", menu=filemenu)
-editmenu = Menu(menubar, tearoff=0)
-editmenu.add_command(label="Undo", command=donothing)
-
-editmenu.add_separator()
-
-editmenu.add_command(label="Cut", command=donothing)
-editmenu.add_command(label="Copy", command=donothing)
-editmenu.add_command(label="Paste", command=donothing)
-editmenu.add_command(label="Delete", command=donothing)
-editmenu.add_command(label="Select All", command=donothing)
-
-menubar.add_cascade(label="Edit", menu=editmenu)
-helpmenu = Menu(menubar, tearoff=0)
-helpmenu.add_command(label="Help Index", command=donothing)
-menubar.add_cascade(label="Help", menu=helpmenu)
-menubar.add_separator()
-menubar.add_command(label="Quit", command=gRoot.destroy)
-
-gRoot.config(menu=menubar)
 gRoot.mainloop()

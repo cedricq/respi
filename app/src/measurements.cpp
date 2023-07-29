@@ -1,13 +1,11 @@
 #include "Fibre.hpp"
-#include "main.h"
-
-#include "crc.hpp"
 #include "DataAccessor.hpp"
-#include "print_output.hpp"
 
+#include "main.h"
 #include "stm32f3xx_hal.h"
 
 #include <string.h>
+#include "crc.hpp"
 
 #define ADC_IN1_PA0_POUT     0
 #define ADC_IN11_PB0_PROX    1
@@ -151,35 +149,16 @@ public:
     virtual void Init()
     {
         InitADC();
-        InitQoutSensor();
+        //InitQoutSensor();
     }
-
-    int a = 0;
-    int flag = 0;
 
     virtual void Run()
     {
         static DataItem time(TIME_ID, true);
         time.set(time.get().value + 1 );
 
-        ReadQoutSensor();
+        //ReadQoutSensor();
         UpdateMeasurements();
-
-		a++;
-		if(a >= 1000)
-		{
-			if (flag != 0)
-			{
-				HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
-				flag = 0;
-			}
-			else
-			{
-				HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
-				flag = 1;
-			}
-			a = 0;
-		}
     }
 };
 

@@ -13,6 +13,7 @@ FibreManager& FibreManager::getInstance(ThreadID id)
     static FibreManager thread_polled;
     static FibreManager thread_1ms;
     static FibreManager thread_10ms;
+    static FibreManager thread_1s;
 
     switch (id)
     {
@@ -25,6 +26,8 @@ FibreManager& FibreManager::getInstance(ThreadID id)
         break;
     case THREAD_10MS_ID:
         return thread_10ms;
+    case THREAD_1S_ID:
+		return thread_1s;
         break;
     }
 }

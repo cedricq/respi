@@ -197,7 +197,11 @@ void SysTick_Handler(void)
   if ( cnt % 10 == 0 )
   {
       tick_10ms();
-      cnt = 0;
+  }
+  if ( cnt % 1000 == 0 )
+  {
+	  tick_1s();
+	  cnt = 0;
   }
   /* USER CODE END SysTick_IRQn 1 */
 }
@@ -260,13 +264,19 @@ void I2C1_EV_IRQHandler(void)
 void USART3_IRQHandler(void)
 {
   /* USER CODE BEGIN USART3_IRQn 0 */
+  int byte_received = 0;
   if ( __HAL_UART_GET_FLAG(&huart3, UART_FLAG_RXNE) == SET )
   {
-      newCharRxUART3();
+	  byte_received = 1;
   }
 
   /* USER CODE END USART3_IRQn 0 */
   HAL_UART_IRQHandler(&huart3);
+
+  if (byte_received == 1)
+  {
+	  newCharRxUART3();
+  }
   /* USER CODE BEGIN USART3_IRQn 1 */
   waitForNewCharRxUART3();
   /* USER CODE END USART3_IRQn 1 */

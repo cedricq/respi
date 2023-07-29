@@ -11,6 +11,9 @@ void init_threads()
 
 	FibreManager& thread_10ms = FibreManager::getInstance(THREAD_10MS_ID);
 	thread_10ms.Init();
+
+	FibreManager& thread_1s = FibreManager::getInstance(THREAD_1S_ID);
+	thread_1s.Init();
 }
 
 void tick_polled()
@@ -30,4 +33,12 @@ void tick_10ms()
     static FibreManager& thread_10ms = FibreManager::getInstance(THREAD_10MS_ID);
     thread_10ms.Run();
 }
+
+void tick_1s()
+{
+    static FibreManager& thread_1s = FibreManager::getInstance(THREAD_1S_ID);
+    thread_1s.Run();
+}
+
+
 
