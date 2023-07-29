@@ -4,7 +4,7 @@ set(APP_SOURCES
     src/breath_machine.cpp
     #src/test_machine.cpp
     
-    src/commands.cpp
+    src/targets.cpp
     src/measurements.cpp
     src/print_output.cpp
     src/trigger.cpp

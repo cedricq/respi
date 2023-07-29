@@ -30,10 +30,10 @@ const int CMD_MOTOR_EXPI      = 500;
 const int INSPI_TIME          = 1000;
 const int EXPI_TIME           = 2000;
 
-class CommandFibre : public Fibre
+class TargetFibre : public Fibre
 {
 public:
-    CommandFibre(): Fibre("CommandFibre")
+    TargetFibre(): Fibre("TargetFibre")
     {
         FibreManager& thread = FibreManager::getInstance(THREAD_1MS_ID);
         thread.Add(std::shared_ptr<Fibre>(this));
@@ -72,7 +72,7 @@ public:
     }
 };
 
-static CommandFibre commandFibre;
+static TargetFibre targetFibre;
 
 
 

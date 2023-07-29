@@ -28,6 +28,9 @@ enum DataItemId
     BREATH_STATE_ID         = 12,
     INSPI_TIME_ID           = 13,
     EXPI_TIME_ID            = 14,
+
+	// Dev
+	STREAM_ON_ID			= 15,
 };
 
 struct Datagram

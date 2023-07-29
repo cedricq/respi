@@ -14,20 +14,29 @@ char UART3_txBuffer[UART_TX_BUF_LEN];
 char UART3_rxBuffer[UART_RX_BUF_LEN];
 unsigned int index_received = 0;
 
+#define RX_BUF_SIZE 32
+char RXBuffer[RX_BUF_SIZE];
+unsigned int index_rx = 0;
+
 DataItemId dataIds[] = {QOUT_ID, POUT_ID, PPROX_ID, MOTOR_SPEED_ID, MOTOR_CURRENT_ID, MAIN_MOTOR_TARGET_ID, PEEP_MOTOR_TARGET_ID, VALVE_IE_TARGET_ID, PUSHPULL_TARGET_ID, BREATH_STATE_ID};
 
 
 void newCharRxUART3(void)
 {
+	char newChar = UART3_rxBuffer[index_received];
+	RXBuffer[index_rx] = newChar;
+	index_rx++;
+	if ( index_rx >= RX_BUF_SIZE ) index_rx = 0;
+	RXBuffer[index_rx] = '\0';
+
 	UART3_rxBuffer[index_received + 1] = '\0';
 	if ( strchr(UART3_rxBuffer, '\n') != NULL)
 	{
 		if (strchr(UART3_rxBuffer, ':') != NULL)
 		{
 			char * stop;
-			int index = 0;
-			int di = strtol((UART3_rxBuffer+index), &stop, 10);
-			index = stop - UART3_rxBuffer;
+			int di = strtol((UART3_rxBuffer), &stop, 10);
+			int index = stop - UART3_rxBuffer;
 			index++;
 			int val = strtol((UART3_rxBuffer+index), &stop, 10);
 
@@ -103,12 +112,48 @@ public:
 
     virtual void Run()
     {
-        //printTelePlot(datagrams_);
-        printDatas(datagrams_);
+        static DataItem stream(STREAM_ON_ID);
+        if(stream.get().value)
+        {
+        	//printTelePlot(datagrams_);
+        	printDatas(datagrams_);
+        }
     }
 
+private:
     std::vector<Datagram*> datagrams_ {};
 };
 
 static PrintFibre printFibre;
 
+class CommandsFibre : public Fibre
+{
+public:
+	CommandsFibre(): Fibre("CommandsFibre")
+    {
+        FibreManager& mgr = FibreManager::getInstance(THREAD_POLLED_ID);
+        mgr.Add(std::shared_ptr<Fibre>(this));
+    }
+
+    virtual void Init()
+    {
+    }
+
+    virtual void Run()
+    {
+    	if( index_rx > 0 )
+    	{
+    		char* token = strstr(RXBuffer, "\n");
+    		if (token != NULL)
+    		{
+    			HAL_UART_Transmit_DMA(p_huart3, (uint8_t*)RXBuffer, (uint8_t)(token - RXBuffer + 1));
+    			index_rx = 0;
+    		}
+    	}
+    }
+
+private:
+
+};
+
+static CommandsFibre commandsFibre;

@@ -26,6 +26,8 @@ Datagram DataItems[] =
 [INSPI_TIME_ID] =       {.value = 0,    .reset = 0,  .min = 0,          .max = INT32_MAX,  .div = 1000,    .name = "m_ti"  , false},
 [EXPI_TIME_ID] =        {.value = 0,    .reset = 0,  .min = 0,          .max = INT32_MAX,  .div = 1000,    .name = "m_te"  , false},
 
+// Dev
+[STREAM_ON_ID] =        {.value = 0,    .reset = 0,  .min = 0,          .max = 1,  		   .div = 1,       .name = "stream", false},
 };
 
 DataItem::DataItem(DataItemId id)
