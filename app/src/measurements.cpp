@@ -20,16 +20,16 @@ uint32_t adc_buf[ADC_BUF_LEN];
 
 const int32_t offsetSensirion = -24576;
 
-const int32_t offsetPout = -366;
-const int32_t offsetPprox = -366;
+const int32_t offsetPout = 1973;  //-366
+const int32_t offsetPprox = 1973; //-366
 
 const int32_t MAX_CURRENT   = 300;
 const int32_t MAX_SPEED     = 60000;
 const int32_t MAX_RAW_ADC   = 4095;
 
-int32_t VoltageTo01mbar(int32_t volt, int32_t offset)
+int32_t RawTo01mbar(int32_t raw, int32_t offset)
 {
-    return ( ( ( ( volt - 33 ) * 13790 ) / 264 ) - 6895) - offset;
+    return ( ( raw - offset ) * 7666 ) / 2048 ;
 }
 
 int32_t RawADCToVolt(int32_t raw)
@@ -130,8 +130,8 @@ void UpdateMeasurements()
     static DataItem motor_speed(MOTOR_SPEED_ID, true);
 
     qout.set(RawSFM3019ToLmin(rawQout));
-    pout.set(VoltageTo01mbar( RawADCToVolt( adc_buf[ADC_IN1_PA0_POUT] ), offsetPout ));
-    pprox.set(VoltageTo01mbar( RawADCToVolt( adc_buf[ADC_IN11_PB0_PROX] ), offsetPprox ));
+    pout.set(RawTo01mbar(adc_buf[ADC_IN1_PA0_POUT], offsetPout));
+    pprox.set(RawTo01mbar( adc_buf[ADC_IN11_PB0_PROX], offsetPprox));
     motor_current.set(RawToCal(adc_buf[ADC_IN6_PC0_I_MOT], MAX_CURRENT, MAX_RAW_ADC));
     motor_speed.set(RawToCal(adc_buf[ADC_IN7_PC1_S_MOT], MAX_SPEED, MAX_RAW_ADC));
 }
@@ -149,7 +149,7 @@ public:
     virtual void Init()
     {
         InitADC();
-        //InitQoutSensor();
+        InitQoutSensor();
     }
 
     virtual void Run()
@@ -157,7 +157,7 @@ public:
         static DataItem time(TIME_ID, true);
         time.set(time.get().value + 1 );
 
-        //ReadQoutSensor();
+        ReadQoutSensor();
         UpdateMeasurements();
     }
 };

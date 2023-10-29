@@ -6,6 +6,7 @@
 
 ```
 export ARM_GCC_BIN_FOLDER="/home/cedric/workspace_hw/gcc-arm-none-eabi-9-2020-q2-update/bin"
+export ARM_GCC_BIN_FOLDER="/c/gcc-arm-none-eabi/9-2020-q2-update/bin"
 ```
 
 2. From the source root directory, build the cross-compiled binary for stm32 target (binaries will be available in the `build` generated folder:
