@@ -85,7 +85,7 @@ void printTelePlot(const std::vector<Datagram*> datagrams)
     for(const auto& data: datagrams)
     {
         char txt[32];
-        sprintf(txt, ">%s:%d\n", data->name, static_cast<int>(data->value));
+        sprintf(txt, ">%s:%f\n", data->name, static_cast<float>(data->value)/data->div);
         strcat(UART3_txBuffer, txt);
     }
     strcat(UART3_txBuffer, "\0");
@@ -97,7 +97,7 @@ class PrintFibre : public Fibre
 public:
     PrintFibre(): Fibre("PrintFibre")
     {
-        FibreManager& mgr = FibreManager::getInstance(THREAD_1S_ID);
+        FibreManager& mgr = FibreManager::getInstance(THREAD_10MS_ID);
         mgr.Add(std::shared_ptr<Fibre>(this));
     }
 
@@ -113,10 +113,11 @@ public:
     virtual void Run()
     {
         static DataItem stream(STREAM_ON_ID);
-        if(stream.get().value)
+        if (true)
+        //if(stream.get().value)
         {
-        	//printTelePlot(datagrams_);
-        	printDatas(datagrams_);
+        	printTelePlot(datagrams_);
+        	//printDatas(datagrams_);
         }
     }
 
@@ -147,13 +148,16 @@ public:
     		if (token != NULL)
     		{
     			HAL_UART_Transmit_DMA(p_huart3, (uint8_t*)RXBuffer, (uint8_t)(token - RXBuffer + 1));
+    			char line[256];
+    			strcpy(line, RXBuffer);
+    			char* c = strstr(line, "\n");
+    			c = '\0';
+    			//CommandsManger -> line
     			index_rx = 0;
     		}
     	}
     }
 
-private:
-
 };
 
-static CommandsFibre commandsFibre;
+//static CommandsFibre commandsFibre;

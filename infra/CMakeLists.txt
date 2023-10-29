@@ -1,6 +1,7 @@
 set(PROJECT infra)
 
 set(APP_SOURCES
+    src/Commands.cpp
     src/DataAccessor.cpp
     src/Fibre.cpp
     src/Threads.cpp
@@ -15,6 +16,7 @@ target_include_directories (${PROJECT} PUBLIC
 IF(TEST)
 	set(TEST_SOURCES
 	    unit/Fibre_t.cpp
+	    unit/Commands_t.cpp
 		)	
 	add_executable (infra_test ${TEST_SOURCES} ${APP_SOURCES})
 	target_link_libraries(infra_test gtest_main ${PROJECT})
